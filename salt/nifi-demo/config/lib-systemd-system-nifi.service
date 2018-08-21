@@ -1,0 +1,9 @@
+[Unit]
+SourcePath=/etc/init.d/nifi
+
+[Service]
+Environment=JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64/
+# use 'run' vs 'start' for nifi. 
+# 'run' will start the process in the foreground so systemd can manage it
+ExecStart=/etc/init.d/nifi run
+ExecStop=/etc/init.d/nifi stop

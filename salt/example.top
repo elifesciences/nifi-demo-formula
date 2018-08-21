@@ -1,4 +1,5 @@
 base:
     '*':
         - elife
+        - elife.java8
         - nifi-demo
