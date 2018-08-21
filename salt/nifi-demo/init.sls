@@ -1,4 +1,5 @@
-    
+# https://nifi.apache.org/docs/nifi-docs/html/administration-guide.html
+   
 # download nifi and nifi-kit
 # note: too large, for now we just reference the one in the shared folder
 
@@ -33,7 +34,16 @@ install-init-file:
         - name: /lib/systemd/system/nifi.service
         - source: salt://nifi-demo/config/lib-systemd-system-nifi.service
     
+nifi-config-properties:
+    file.managed:
+        - name: {{ nifi_dir }}/conf/nifi.properties
+        - source: salt://nifi-demo/config/srv-nifi-conf-nifi.properties
 
 nifi:
+    # this can take a short while to come up
     service.running:
+        # doesn't seem to be working, use "service nifi start" or "systemctl start nifi"
+        # use "pgrep nifi" or "service nifi status" or "systemctl status nifi" to see if it's running
         - enable: True
+        - watch:
+            - nifi-config-properties
