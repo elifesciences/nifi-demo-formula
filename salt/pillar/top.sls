@@ -1,0 +1,4 @@
+base:
+    '*':
+        - elife
+        - nifi-demo
