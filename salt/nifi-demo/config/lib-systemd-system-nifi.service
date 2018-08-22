@@ -1,9 +1,14 @@
 [Unit]
-SourcePath=/etc/init.d/nifi
+Requires=network.target
+After=network.target
+
+[Install]
+WantedBy=multi-user.target
 
 [Service]
 Environment=JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64/
+Environment=NIFI_HOME=/srv/nifi-1.7.1
 # use 'run' vs 'start' for nifi. 
 # 'run' will start the process in the foreground so systemd can manage it
-ExecStart=/etc/init.d/nifi run
-ExecStop=/etc/init.d/nifi stop
+ExecStart=/srv/nifi-1.7.1/bin/nifi.sh run
+ExecStop=/srv/nifi-1.7.1/bin/nifi.sh stop
