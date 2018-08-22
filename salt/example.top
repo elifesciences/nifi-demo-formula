@@ -2,4 +2,5 @@ base:
     '*':
         - elife
         - elife.java8
+        - elife.nginx
         - nifi-demo
