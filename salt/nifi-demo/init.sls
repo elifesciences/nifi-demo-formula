@@ -61,10 +61,28 @@ install-init-file:
         - name: /lib/systemd/system/nifi.service
         - source: salt://nifi-demo/config/lib-systemd-system-nifi.service
 
+generate keystore:
+    cmd.run:
+        - cwd: {{ nifi_dir }}/conf
+        - name: |
+            keytool -genkeypair -noprompt \
+                -alias client \
+                -dname "CN=localhost, OU=IT, O=eLife, L=Cambridge, S=Cambridgeshire, C=GB" \
+                -keystore nifi.keystore \
+                -storepass {{ pillar.data_pipeline.nifi.keystore_password }} \
+                -keypass {{ pillar.data_pipeline.nifi.key_password }}
+        - unless:
+            - test -e {{ nifi_dir }}/conf/nifi.keystore
+
 nifi-config-properties:
     file.managed:
         - name: {{ nifi_dir }}/conf/nifi.properties
         - source: salt://nifi-demo/config/srv-nifi-conf-nifi.properties
+        - template: jinja
+        - defaults:
+            dev: {{ pillar.elife.env == 'dev' }}
+            nifi_dir: {{ nifi_dir }}
+
 
 nifi:
     # this can take a short while to come up
