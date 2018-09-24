@@ -82,7 +82,15 @@ nifi-config-properties:
         - defaults:
             dev: {{ pillar.elife.env == 'dev' }}
             nifi_dir: {{ nifi_dir }}
+        - watch_in:
+            - service: nifi
 
+nifi-config-auth:
+    file.managed:
+        - name: {{ nifi_dir }}/conf/authorizers.xml
+        - source: salt://nifi-demo/config/srv-nifi-conf-authorizers.xml
+        - watch_in:
+            - service: nifi
 
 nifi:
     # this can take a short while to come up
