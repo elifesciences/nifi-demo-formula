@@ -133,9 +133,9 @@ build nifi-bigquery-bundle:
             - test -f {{ nifi_dir }}/lib/nifi-bigquery-nar-0.1.nar
 
     cmd.run:
-        - cwd: /opt/nifi-bigquery-bundle
         - name: |
             set -e
+            cd /opt/nifi-bigquery-bundle
             mvn clean install
             cp nifi-bigquery-nar/target/nifi-bigquery-nar-0.1.nar {{ nifi_dir }}/lib/
             rm -rf /opt/nifi-bigquery-bundle
