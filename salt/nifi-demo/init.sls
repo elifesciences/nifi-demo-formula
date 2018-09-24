@@ -108,3 +108,38 @@ nifi-nginx-proxy:
         - template: jinja
         - watch_in:
             - service: nginx-server-service
+
+#
+# 
+#
+
+# this will need improving
+grr:
+    pkg.installed:
+        - pkgs:
+            - openjdk-8-jdk
+            - maven
+        - install_recommends: False
+
+build nifi-bigquery-bundle:
+    git.latest:
+        - name: https://github.com/theShadow89/nifi-bigquery-bundle
+        - rev: master
+        # salt keeps this at whatever was set at clone time.
+        # it's confusing to clone a specific revision but it still reports itself as being 'master' or 'develop'
+        - branch: master
+        - target: /opt/nifi-bigquery-bundle
+        - unless:
+            - test -f {{ nifi_dir }}/lib/nifi-bigquery-nar-0.1.nar
+
+    cmd.run:
+        - cwd: /opt/nifi-bigquery-bundle
+        - name: |
+            set -e
+            mvn clean install
+            cp nifi-bigquery-nar/target/nifi-bigquery-nar-0.1.nar {{ nifi_dir }}/lib/
+            rm -rf /opt/nifi-bigquery-bundle
+        - require:
+            - git: build nifi-bigquery-bundle
+        - unless:
+            - test -f {{ nifi_dir }}/lib/nifi-bigquery-nar-0.1.nar
