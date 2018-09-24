@@ -141,5 +141,7 @@ build nifi-bigquery-bundle:
             rm -rf /opt/nifi-bigquery-bundle
         - require:
             - git: build nifi-bigquery-bundle
+        - watch_in:
+            - service: nifi
         - unless:
             - test -f {{ nifi_dir }}/lib/nifi-bigquery-nar-0.1.nar
